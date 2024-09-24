@@ -4,10 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple FPS Game</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
 </head>
 <body>
     <canvas id="gameCanvas"></canvas>
-    <script src="game.js"></script>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let player = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            size: 20,
+            color: 'white',
+            speed: 5
+        };
+
+        function drawPlayer() {
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.size, player.size);
+        }
+
+        function update() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPlayer();
+        }
+
+        function movePlayer(event) {
+            switch(event.key) {
+                case 'ArrowUp':
+                    player.y = Math.max(0, player.y - player.speed);
+                    break;
+                case 'ArrowDown':
+                    player.y = Math.min(canvas.height - player.size, player.y + player.speed);
+                    break;
+                case 'ArrowLeft':
+                    player.x = Math.max(0, player.x - player.speed);
+                    break;
+                case 'ArrowRight':
+                    player.x = Math.min(canvas.width - player.size, player.x + player.speed);
+                    break;
+            }
+        }
+
+        window.addEventListener('keydown', movePlayer);
+
+        function gameLoop() {
+            update();
+            requestAnimationFrame(gameLoop);
+        }
+
+        gameLoop();
+    </script>
 </body>
 </html>
